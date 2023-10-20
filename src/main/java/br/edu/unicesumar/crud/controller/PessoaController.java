@@ -1,6 +1,8 @@
 package br.edu.unicesumar.crud.controller;
 
-import br.edu.unicesumar.crud.model.Pessoa;
+import br.edu.unicesumar.crud.model.domain.Pessoa;
+import br.edu.unicesumar.crud.model.repository.PessoaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -10,12 +12,18 @@ import java.util.stream.Collectors;
 @RestController // avisamos para o Spring que faz parte da camada de Controller
 @RequestMapping("/pessoa") //indicamos como mapeamos a requisição
 public class PessoaController {
+    @Autowired
+    private PessoaRepository pessoaRepository;
 
-    @GetMapping
+    public List<Pessoa> all() {
+        return pessoaRepository.findAll();
+    }
+
+    /*@GetMapping
     public List<Pessoa> all() {
         return mock();
     }
-
+     */
     @GetMapping("/{id}")
     public Pessoa byId(@PathVariable Long id) {
         return mock().stream().filter(pessoa -> pessoa.getId().equals(id)).findFirst().orElse(null);
