@@ -7,8 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
-@RequestMapping("/pessoa")
+@RestController // avisamos para o Spring que faz parte da camada de Controller
+@RequestMapping("/pessoa") //indicamos como mapeamos a requisição
 public class PessoaController {
 
     @GetMapping
@@ -42,5 +42,13 @@ public class PessoaController {
                 new Pessoa(5L, "Ricardo", "789"),
                 new Pessoa(6L, "Vilela", "147")
         );
+    }
+    @PutMapping("/{id}")
+   public void update(@PathVariable Long id, @RequestBody Pessoa editPessoa) {
+        Pessoa pessoa = new Pessoa(id, editPessoa.getNome(), editPessoa.getDocumento());
+    }
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) {
+        long l = id.longValue();
     }
 }
