@@ -1,62 +1,45 @@
 package br.edu.unicesumar.crud.controller;
 
+import br.edu.unicesumar.crud.exceptions.PessoaException;
 import br.edu.unicesumar.crud.model.domain.Pessoa;
 import br.edu.unicesumar.crud.model.repository.PessoaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@RestController // avisamos para o Spring que faz parte da camada de Controller
-@RequestMapping("/pessoa") //indicamos como mapeamos a requisição
+@RestController
+@RequestMapping("/pessoa")
 public class PessoaController {
+
     @Autowired
     private PessoaRepository pessoaRepository;
 
+    @GetMapping
     public List<Pessoa> all() {
         return pessoaRepository.findAll();
     }
 
-    /*@GetMapping
-    public List<Pessoa> all() {
-        return mock();
-    }
-     */
     @GetMapping("/{id}")
-    public Pessoa byId(@PathVariable Long id) {
-        return mock().stream().filter(pessoa -> pessoa.getId().equals(id)).findFirst().orElse(null);
+    public Pessoa byId(@PathVariable Long id) throws PessoaException {
+    return pessoaRepository.findById(id).orElseThrow(PessoaException::new);
     }
 
-    @GetMapping("/pesquisa")
-    public List<Pessoa> searchBy(@RequestParam("nome") String nome) {
-        return mock().stream().filter(pessoa -> pessoa.getNome().toLowerCase().contains(nome.toLowerCase())).collect(Collectors.toList());
-    }
 
     @PostMapping
     public Pessoa create(@RequestBody Pessoa novaPessoa) {
-        long idMax = mock().stream().mapToLong(Pessoa::getId).max().orElse(0L);
-
-        return new Pessoa(idMax + 1L, novaPessoa.getNome(), novaPessoa.getDocumento());
+        return pessoaRepository.save(novaPessoa);
     }
 
-    private List<Pessoa> mock() {
-        return Arrays.asList(
-                new Pessoa(1L, "Roberto", "123"),
-                new Pessoa(2L, "Ronaldo", "321"),
-                new Pessoa(3L, "Maria", "546"),
-                new Pessoa(4L, "Ricardo", "987"),
-                new Pessoa(5L, "Ricardo", "789"),
-                new Pessoa(6L, "Vilela", "147")
-        );
-    }
-    @PutMapping("/{id}")
-   public void update(@PathVariable Long id, @RequestBody Pessoa editPessoa) {
+    @PutMapping("{id}")
+    public void update(@PathVariable Long id, @RequestBody Pessoa editPessoa) {
         Pessoa pessoa = new Pessoa(id, editPessoa.getNome(), editPessoa.getDocumento());
     }
+
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
         long l = id.longValue();
     }
+
+
 }
