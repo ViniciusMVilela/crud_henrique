@@ -31,15 +31,33 @@ public class PessoaController {
         return pessoaRepository.save(novaPessoa);
     }
 
+    /*
     @PutMapping("{id}")
     public void update(@PathVariable Long id, @RequestBody Pessoa editPessoa) {
         Pessoa pessoa = new Pessoa(id, editPessoa.getNome(), editPessoa.getDocumento());
     }
+     */
+
+//    @DeleteMapping("/{id}")
+//    public void delete(@PathVariable Long id) {
+//        long l = id.longValue();
+//    }
 
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        long l = id.longValue();
+        pessoaRepository.deleteById(id);
     }
 
+    @PutMapping("/{id}")
+    public Pessoa update(@PathVariable Long id, @RequestBody Pessoa edit) {
+        Pessoa pessoaDb =
+        pessoaRepository.findById(id).orElse(new Pessoa());
+
+        pessoaDb.setId(edit.getId());
+        pessoaDb.setNome(edit.getNome());
+        pessoaDb.setDocumento(edit.getDocumento());
+
+        return pessoaRepository.save(pessoaDb);
+    }
 
 }
