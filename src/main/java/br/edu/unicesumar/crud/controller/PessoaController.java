@@ -60,4 +60,8 @@ public class PessoaController {
         return pessoaRepository.save(pessoaDb);
     }
 
+    @GetMapping("/consulta")
+    public Pessoa searchByDocumento(@RequestParam("doc") String doc) {
+        return pessoaRepository.findByDocumentoEquals(doc);
+    }
 }
